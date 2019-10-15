@@ -13,23 +13,28 @@ Object.assign(Fly.prototype,{
     "$http":rq ,
 
     // File download API
-    download(url, savePath, params = null,options) {
-        return this.request(url, params,utils.merge({responseType: "stream"},options))
-            .then(d => {
-                return new Promise((resolve,reject)=> {
-                    fs.writeFile(savePath, d.data,(err)=>{
-                        if(!err) {
-                            resolve({size:d.data.length,path:path.resolve(savePath)})
-                        }else{
-                            // Failed to save file
-                            err.status=2
-                            reject(err)
-                        }
+    async download(url, savePath, params = null, options) {
+        try {
+            const d = await this.request(url, params,utils.merge({responseType: "stream"},options));
+
+            return await (async d => {
+                    return new Promise((resolve,reject)=> {
+                        fs.writeFile(savePath, d.data,(err)=>{
+                            if(!err) {
+                                resolve({size:d.data.length,path:path.resolve(savePath)})
+                            }else{
+                                // Failed to save file
+                                err.status=2
+                                reject(err)
+                            }
+                        })
                     })
-                })
-            }).catch(e=>{
-                return Promise.reject(e)
-            })
+                })(d);
+        } catch (e) {
+            return await (async e => {
+                    return Promise.reject(e)
+                })(e);
+        }
     },
 
     // File upload API

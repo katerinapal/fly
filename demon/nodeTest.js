@@ -11,11 +11,19 @@ fly.config.baseURL = "http://localhost/ds"
 
 //get请求
 
-fly.get("https://www.baidu.com", {wd: "xxx"}).then(d => {
-    console.log("get请求成功", d.data)
-}).catch((e) => {
-    log(`get请求失败，错误码：${e.status}, 错误信息：${e.message}`);
-})
+(async () => {
+    try {
+        const d = await fly.get("https://www.baidu.com", {wd: "xxx"});
+
+        return await (async d => {
+            console.log("get请求成功", d.data)
+        })(d);
+    } catch (e) {
+        return await (async e => {
+            log(`get请求失败，错误码：${e.status}, 错误信息：${e.message}`);
+        })(e);
+    }
+})()
 
 
 // 文件下载

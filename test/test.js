@@ -11,28 +11,30 @@ fly.config.baseURL = "http://www.dtworkroom.com/doris/1/2.0.0/"
 var newFly = new Fly;
 newFly.config = fly.config;
 var log = console.log
-fly.interceptors.request.use(function (request) {
+fly.interceptors.request.use(async function(request) {
     log("request：path:" + request.url + "，baseURL:" + request.baseURL)
     if (!csrfToken) {
         log("No token，request token firstly...");
         // locking the current instance, let the incomming request task enter a
         // queue before they enter the request interceptors.
         fly.lock();
-        //Using  another fly instance to request csrfToken.
-        //If use the same fly instance, there may lead a infinite loop:
-        //(The request will go to the interceptor first, and then
-        //enter the interceptor again when launching the new request
-        //in the interceptor....)
-        return newFly.get("/token").then(function (d) {
-            request.headers["csrfToken"] = csrfToken = d.data.data.token;
-            log("token请求成功，值为: " + d.data.data.token);
-            log("发起请求：path:" + request.url + "，baseURL:" + request.baseURL)
-            return request
-        }).finally(function () {
-            //fly.clear(); //clear the request queue
-            // unlock the current instance, flush the request queue.
-            fly.unlock();
-        })
+
+        try {
+            const d = await newFly.get("/token");
+
+            return await (async d => {
+                request.headers["csrfToken"] = csrfToken = d.data.data.token;
+                log("token请求成功，值为: " + d.data.data.token);
+                log("发起请求：path:" + request.url + "，baseURL:" + request.baseURL)
+                return request
+            })(d);
+        } finally {
+            await (async () => {
+                //fly.clear(); //clear the request queue
+                // unlock the current instance, flush the request queue.
+                fly.unlock();
+            })();
+        }
     } else {
         request.headers["csrfToken"] = csrfToken;
     }
@@ -48,59 +50,117 @@ describe("request", function () {
         };
 
         var promises = [
-            fly.get("/test?tag=1")
-                .then(function (d) {
-                    log("success")
-                }).catch(function (e) {
-                log("fail")
-            }),
-            fly.get("/test?tag=2")
-                .then(function (d) {
-                    log("success")
-                }).catch(function (e) {
-                log("fail")
-            }),
-            fly.get("/test?tag=3")
-                .then(function (d) {
-                    log("success")
-                }).catch(function (e) {
-                log("fail")
-            }),
-            fly.get("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}}, {
-                headers: {
-                    "content-type": "application/x-www-form-urlencoded"
-                }
-            })
-                .then(function () {
-                    log("success")
-                }).catch(function () {
-                log("fail")
-            }),
-            fly.post("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}}, {
-                headers: {
-                    "content-type": "application/x-www-form-urlencoded"
-                }
-            })
-                .then(function () {
-                    log("success")
-                }).catch(function () {
-                log("fail")
-            }),
+            (async () => {
+                try {
+                    const d = await fly.get("/test?tag=1");
 
-            fly.post("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}})
-                .then(function () {
-                    log("success")
-                }).catch(function () {
-                log("fail")
-            }),
+                    return await (async d => {
+                            log("success")
+                        })(d);
+                } catch (e) {
+                    return await (async e => {
+                        log("fail")
+                    })(e);
+                }
+            })(),
+            (async () => {
+                try {
+                    const d = await fly.get("/test?tag=2");
 
-            fly.get("http://xxx.bxxcom").catch(function (e) {
-                log(e.message);
-            })
+                    return await (async d => {
+                            log("success")
+                        })(d);
+                } catch (e) {
+                    return await (async e => {
+                        log("fail")
+                    })(e);
+                }
+            })(),
+            (async () => {
+                try {
+                    const d = await fly.get("/test?tag=3");
+
+                    return await (async d => {
+                            log("success")
+                        })(d);
+                } catch (e) {
+                    return await (async e => {
+                        log("fail")
+                    })(e);
+                }
+            })(),
+            (async () => {
+                let generatedVariable19;
+
+                try {
+                    generatedVariable19 = await fly.get("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}}, {
+                        headers: {
+                            "content-type": "application/x-www-form-urlencoded"
+                        }
+                    });
+
+                    return await (async () => {
+                            log("success")
+                        })();
+                } catch (catchVar) {
+                    return await (async () => {
+                        log("fail")
+                    })();
+                }
+            })(),
+            (async () => {
+                let generatedVariable20;
+
+                try {
+                    generatedVariable20 = await fly.post("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}}, {
+                        headers: {
+                            "content-type": "application/x-www-form-urlencoded"
+                        }
+                    });
+
+                    return await (async () => {
+                            log("success")
+                        })();
+                } catch (catchVar) {
+                    return await (async () => {
+                        log("fail")
+                    })();
+                }
+            })(),
+
+            (async () => {
+                let generatedVariable21;
+
+                try {
+                    generatedVariable21 = await fly.post("/test?fm=true", {aa: 8, bb: 9, tt: {xx: 5}});
+
+                    return await (async () => {
+                            log("success")
+                        })();
+                } catch (catchVar) {
+                    return await (async () => {
+                        log("fail")
+                    })();
+                }
+            })(),
+
+            (async () => {
+                try {
+                    return await fly.get("http://xxx.bxxcom");
+                } catch (e) {
+                    return await (async e => {
+                        log(e.message);
+                    })(e);
+                }
+            })()
         ];
 
-        fly.all(promises).then(fly.spread(function () {
-            done()
-        }))
+        (async () => {
+            fly.spread(function () {
+                done()
+            });
+
+            return await fly.all(promises);
+        })()
     })
 });

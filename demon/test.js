@@ -5,25 +5,53 @@
 
 var qs = require('qs');
 import fly from "../index"
-fly.get("../package.json", {aa: 8, bb: 9, tt: {xx: 5}}).then((d) => {
-    console.log("get result:", d)
-}).catch((e) => console.log("error", e))
+(async () => {
+    try {
+        const d = await fly.get("../package.json", {aa: 8, bb: 9, tt: {xx: 5}});
 
-fly.post("../package.json", {aa: 8, bb: 9, tt: {xx: 5}}).then((d) => {
-    console.log("post result:", d)
-}).catch((e) => console.log("error", e))
+        return await (async d => {
+            console.log("get result:", d)
+        })(d);
+    } catch (e) {
+        return await console.log("error", e);
+    }
+})()
 
-fly.request("../package.json", {hh: 5}, {
-    method: "post"
-}).then(d => {
-    console.log("ajax result:", d)
-})
+(async () => {
+    try {
+        const d = await fly.post("../package.json", {aa: 8, bb: 9, tt: {xx: 5}});
+
+        return await (async d => {
+            console.log("post result:", d)
+        })(d);
+    } catch (e) {
+        return await console.log("error", e);
+    }
+})()
+
+(async () => {
+    const d = await fly.request("../package.json", {hh: 5}, {
+        method: "post"
+    });
+
+    return await (async d => {
+        console.log("ajax result:", d)
+    })(d);
+})()
 
 
 //send data in the application/x-www-form-urlencoded format
-fly.get("",qs.stringify({aa: 8, bb: 9, tt: {xx: 5}})).then((d)=>{
+(async () => {
+    const d = await fly.get("",qs.stringify({aa: 8, bb: 9, tt: {xx: 5}}));
 
-})
-fly.post("../package.json", qs.stringify({aa: 8, bb: 9, tt: {xx: 5}})).then((d) => {
+    return await (async d => {
 
-})
+    })(d);
+})()
+(async () => {
+    const d = await fly.post("../package.json", qs.stringify({aa: 8, bb: 9, tt: {xx: 5}}));
+
+    return await (async d => {
+
+    })(d);
+})()

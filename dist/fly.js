@@ -274,9 +274,14 @@ var Fly = function () {
                  */
                 function enqueueIfLocked(promise, callback) {
                     if (promise) {
-                        promise.then(function () {
-                            callback();
-                        });
+                        (async () => {
+                            let generatedVariable5;
+                            generatedVariable5 = await promise;
+
+                            return await (async () => {
+                                callback();
+                            })();
+                        })();
                     } else {
                         callback();
                     }
@@ -392,11 +397,19 @@ var Fly = function () {
                             if (!isPromise(data)) {
                                 data = Promise[type === 0 ? "resolve" : "reject"](data);
                             }
-                            data.then(function (d) {
-                                resolve(d);
-                            }).catch(function (e) {
-                                reject(e);
-                            });
+                            (async () => {
+                                try {
+                                    const d = await data;
+
+                                    return await (async d => {
+                                        resolve(d);
+                                    })(d);
+                                } catch (e) {
+                                    return await (async e => {
+                                        reject(e);
+                                    })(e);
+                                }
+                            })();
                         });
                     }
 
@@ -481,16 +494,26 @@ var Fly = function () {
                     if (!isPromise(ret)) {
                         ret = Promise.resolve(ret);
                     }
-                    ret.then(function (d) {
-                        //if options continue
-                        if (d === options) {
-                            makeRequest(d);
-                        } else {
-                            resolve(d);
+                    (async () => {
+                        let d;
+
+                        try {
+                            d = await ret;
+                        } catch (err) {
+                            return await (async err => {
+                                reject(err);
+                            })(err);
                         }
-                    }, function (err) {
-                        reject(err);
-                    });
+
+                        return await (async d => {
+                            //if options continue
+                            if (d === options) {
+                                makeRequest(d);
+                            } else {
+                                resolve(d);
+                            }
+                        })(d);
+                    })();
                 });
             });
             promise.engine = engine;

@@ -108,9 +108,14 @@ class Fly {
              */
             function enqueueIfLocked(promise, callback) {
                 if (promise) {
-                    promise.then(() => {
-                        callback()
-                    })
+                    (async () => {
+                        let generatedVariable18;
+                        generatedVariable18 = await promise;
+
+                        return await (async () => {
+                            callback()
+                        })();
+                    })()
                 } else {
                     callback()
                 }
@@ -228,11 +233,19 @@ class Fly {
                         if (!isPromise(data)) {
                             data = Promise[type === 0 ? "resolve" : "reject"](data)
                         }
-                        data.then(d => {
-                            resolve(d)
-                        }).catch((e) => {
-                            reject(e)
-                        })
+                        (async () => {
+                            try {
+                                const d = await data;
+
+                                return await (async d => {
+                                    resolve(d)
+                                })(d);
+                            } catch (e) {
+                                return await (async e => {
+                                    reject(e)
+                                })(e);
+                            }
+                        })()
                     })
                 }
 
@@ -318,16 +331,26 @@ class Fly {
                 if (!isPromise(ret)) {
                     ret = Promise.resolve(ret)
                 }
-                ret.then((d) => {
-                    //if options continue
-                    if (d === options) {
-                        makeRequest(d)
-                    } else {
-                        resolve(d)
+                (async () => {
+                    let d;
+
+                    try {
+                        d = await ret;
+                    } catch (err) {
+                        return await (async err => {
+                            reject(err)
+                        })(err);
                     }
-                }, (err) => {
-                    reject(err)
-                })
+
+                    return await (async d => {
+                        //if options continue
+                        if (d === options) {
+                            makeRequest(d)
+                        } else {
+                            resolve(d)
+                        }
+                    })(d);
+                })()
             })
         })
         promise.engine = engine;

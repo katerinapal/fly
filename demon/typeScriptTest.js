@@ -15,4 +15,7 @@ fly.interceptors.response.use(function (response) {
 }, function (err) {
     log(err);
 });
-fly.get("").then(d => console.log("success", d));
+(async () => {
+    const d = await fly.get("");
+    return await console.log("success", d);
+})();
