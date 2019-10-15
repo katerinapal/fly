@@ -1,2 +1,2 @@
-var Fly= require("./src/node")
-module.exports = new Fly;
+var Fly = require("./src/node");
+module.exports = new Fly();

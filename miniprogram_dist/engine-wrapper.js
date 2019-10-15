@@ -1,125 +1,121 @@
 (function webpackUniversalModuleDefinition(root, factory) {
-    if (typeof exports === 'object' && typeof module === 'object')
-        module.exports = factory();
-    else if (typeof define === 'function' && define.amd)
-        define([], factory);
-    else {
+    if (typeof exports === 'object' && typeof module === 'object') module.exports = factory();else if (typeof define === 'function' && define.amd) define([], factory);else {
         var a = factory();
         for (var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
     }
 })(this, function () {
-    return /******/ (function (modules) { // webpackBootstrap
-        /******/ 	// The module cache
-        /******/
-        var installedModules = {};
-        /******/
-        /******/ 	// The require function
-        /******/
-        function __webpack_require__(moduleId) {
+    return (/******/function (modules) {
+            // webpackBootstrap
+            /******/ // The module cache
             /******/
-            /******/ 		// Check if module is in cache
+            var installedModules = {};
             /******/
-            if (installedModules[moduleId]) {
+            /******/ // The require function
+            /******/
+            function __webpack_require__(moduleId) {
                 /******/
-                return installedModules[moduleId].exports;
+                /******/ // Check if module is in cache
+                /******/
+                if (installedModules[moduleId]) {
+                    /******/
+                    return installedModules[moduleId].exports;
+                    /******/
+                }
+                /******/ // Create a new module (and put it into the cache)
+                /******/
+                var module = installedModules[moduleId] = {
+                    /******/i: moduleId,
+                    /******/l: false,
+                    /******/exports: {}
+                    /******/
+                };
+                /******/
+                /******/ // Execute the module function
+                /******/
+                modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+                /******/
+                /******/ // Flag the module as loaded
+                /******/
+                module.l = true;
+                /******/
+                /******/ // Return the exports of the module
+                /******/
+                return module.exports;
                 /******/
             }
-            /******/ 		// Create a new module (and put it into the cache)
+
             /******/
-            var module = installedModules[moduleId] = {
-                /******/            i: moduleId,
-                /******/            l: false,
-                /******/            exports: {}
+            /******/
+            /******/ // expose the modules object (__webpack_modules__)
+            /******/
+            __webpack_require__.m = modules;
+            /******/
+            /******/ // expose the module cache
+            /******/
+            __webpack_require__.c = installedModules;
+            /******/
+            /******/ // identity function for calling harmony imports with the correct context
+            /******/
+            __webpack_require__.i = function (value) {
+                return value;
+            };
+            /******/
+            /******/ // define getter function for harmony exports
+            /******/
+            __webpack_require__.d = function (exports, name, getter) {
+                /******/
+                if (!__webpack_require__.o(exports, name)) {
+                    /******/
+                    Object.defineProperty(exports, name, {
+                        /******/configurable: false,
+                        /******/enumerable: true,
+                        /******/get: getter
+                        /******/
+                    });
+                    /******/
+                }
                 /******/
             };
             /******/
-            /******/ 		// Execute the module function
+            /******/ // getDefaultExport function for compatibility with non-harmony modules
             /******/
-            modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-            /******/
-            /******/ 		// Flag the module as loaded
-            /******/
-            module.l = true;
-            /******/
-            /******/ 		// Return the exports of the module
-            /******/
-            return module.exports;
-            /******/
-        }
-
-        /******/
-        /******/
-        /******/ 	// expose the modules object (__webpack_modules__)
-        /******/
-        __webpack_require__.m = modules;
-        /******/
-        /******/ 	// expose the module cache
-        /******/
-        __webpack_require__.c = installedModules;
-        /******/
-        /******/ 	// identity function for calling harmony imports with the correct context
-        /******/
-        __webpack_require__.i = function (value) {
-            return value;
-        };
-        /******/
-        /******/ 	// define getter function for harmony exports
-        /******/
-        __webpack_require__.d = function (exports, name, getter) {
-            /******/
-            if (!__webpack_require__.o(exports, name)) {
+            __webpack_require__.n = function (module) {
                 /******/
-                Object.defineProperty(exports, name, {
-                    /******/                configurable: false,
-                    /******/                enumerable: true,
-                    /******/                get: getter
-                    /******/
-                });
-                /******/
-            }
-            /******/
-        };
-        /******/
-        /******/ 	// getDefaultExport function for compatibility with non-harmony modules
-        /******/
-        __webpack_require__.n = function (module) {
-            /******/
-            var getter = module && module.__esModule ?
-                /******/            function getDefault() {
+                var getter = module && module.__esModule ?
+                /******/function getDefault() {
                     return module['default'];
                 } :
-                /******/            function getModuleExports() {
+                /******/function getModuleExports() {
                     return module;
                 };
+                /******/
+                __webpack_require__.d(getter, 'a', getter);
+                /******/
+                return getter;
+                /******/
+            };
             /******/
-            __webpack_require__.d(getter, 'a', getter);
+            /******/ // Object.prototype.hasOwnProperty.call
             /******/
-            return getter;
+            __webpack_require__.o = function (object, property) {
+                return Object.prototype.hasOwnProperty.call(object, property);
+            };
             /******/
-        };
-        /******/
-        /******/ 	// Object.prototype.hasOwnProperty.call
-        /******/
-        __webpack_require__.o = function (object, property) {
-            return Object.prototype.hasOwnProperty.call(object, property);
-        };
-        /******/
-        /******/ 	// __webpack_public_path__
-        /******/
-        __webpack_require__.p = "";
-        /******/
-        /******/ 	// Load entry module and return exports
-        /******/
-        return __webpack_require__(__webpack_require__.s = 1);
-        /******/
-    })
-    /************************************************************************/
-    /******/([
+            /******/ // __webpack_public_path__
+            /******/
+            __webpack_require__.p = "";
+            /******/
+            /******/ // Load entry module and return exports
+            /******/
+            return __webpack_require__(__webpack_require__.s = 1);
+            /******/
+        }(
+        /************************************************************************/
+        /******/[
         /* 0 */
-        /***/ (function (module, exports, __webpack_require__) {
+        /***/function (module, exports, __webpack_require__) {
 
             "use strict";
-
 
             var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
                 return typeof obj;
@@ -198,9 +194,9 @@
             };
 
             /***/
-        }),
+        },
         /* 1 */
-        /***/ (function (module, exports, __webpack_require__) {
+        /***/function (module, exports, __webpack_require__) {
 
             function KEEP(_, cb) {
                 cb();
@@ -246,7 +242,7 @@
             var util = __webpack_require__(0);
             var isBrowser = typeof document !== "undefined";
 
-//EngineWrapper can help  generating  a  http engine quickly through a adapter
+            //EngineWrapper can help  generating  a  http engine quickly through a adapter
             function EngineWrapper(adapter) {
                 var AjaxEngine = function () {
                     function AjaxEngine() {
@@ -342,7 +338,7 @@
                                     // Network error, set the status code 0
                                     if (!self.status) {
                                         self.statusText = responseText;
-                                        self._call("onerror", {msg: statusMessage});
+                                        self._call("onerror", { msg: statusMessage });
                                     } else {
                                         // Parsing the response headers to array in a object,  because
                                         // there may be multiple values with the same header name
@@ -404,7 +400,7 @@
                         key: "abort",
                         value: function abort(msg) {
                             this._changeReadyState(0);
-                            this._call("onerror", {msg: msg});
+                            this._call("onerror", { msg: msg });
                             this._call("onloadend");
                         }
                     }], [{
@@ -420,11 +416,12 @@
                 return AjaxEngine;
             }
 
-// learn more about keep-loader: https://github.com/wendux/keep-loader
+            // learn more about keep-loader: https://github.com/wendux/keep-loader
             ;
             module.exports = EngineWrapper;
 
             /***/
-        })
-        /******/]);
+        }]
+        /******/)
+    );
 });

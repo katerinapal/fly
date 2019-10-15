@@ -5,7 +5,7 @@ const statusList = {
     13: '超时',
     14: '解码失败',
     19: 'HTTP错误'
-}
+};
 module.exports = function (request, responseCallback) {
     let con = {
         method: request.method,
@@ -19,7 +19,7 @@ module.exports = function (request, responseCallback) {
                 statusCode: res.status,
                 responseText: res.data,
                 headers: res.headers
-            })
+            });
         },
         fail(res) {
             responseCallback({
@@ -27,8 +27,8 @@ module.exports = function (request, responseCallback) {
                 responseText: res.data,
                 headers: res.headers,
                 errMsg: statusList[res.status] || ""
-            })
+            });
         }
-    }
-    my.httpRequest(con)
-}
+    };
+    my.httpRequest(con);
+};

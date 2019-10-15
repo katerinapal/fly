@@ -1,29 +1,22 @@
 module.exports = {
     type(ob) {
-        return Object.prototype.toString.call(ob).slice(8, -1).toLowerCase()
+        return Object.prototype.toString.call(ob).slice(8, -1).toLowerCase();
     },
     isObject(ob, real) {
         if (real) {
-            return this.type(ob) === "object"
+            return this.type(ob) === "object";
         } else {
-            return ob && typeof ob === 'object'
+            return ob && typeof ob === 'object';
         }
     },
     isFormData(val) {
-        return (typeof FormData !== 'undefined') && (val instanceof FormData);
+        return typeof FormData !== 'undefined' && val instanceof FormData;
     },
     trim(str) {
         return str.replace(/(^\s*)|(\s*$)/g, '');
     },
     encode(val) {
-        return encodeURIComponent(val)
-            .replace(/%40/gi, '@')
-            .replace(/%3A/gi, ':')
-            .replace(/%24/g, '$')
-            .replace(/%2C/gi, ',')
-            .replace(/%20/g, '+')
-            .replace(/%5B/gi, '[')
-            .replace(/%5D/gi, ']');
+        return encodeURIComponent(val).replace(/%40/gi, '@').replace(/%3A/gi, ':').replace(/%24/g, '$').replace(/%2C/gi, ',').replace(/%20/g, '+').replace(/%5B/gi, '[').replace(/%5D/gi, ']');
     },
     formatParams(data) {
         let str = "";
@@ -41,7 +34,6 @@ module.exports = {
                     if (!that.isObject(e)) i = "";
                     _encode(e, path + `%5B${i}%5D`);
                 });
-
             } else if (type == "object") {
                 for (let key in sub) {
                     if (path) {
@@ -68,10 +60,10 @@ module.exports = {
             if (!a.hasOwnProperty(key)) {
                 a[key] = b[key];
             } else if (this.isObject(b[key], 1) && this.isObject(a[key], 1)) {
-                this.merge(a[key], b[key])
+                this.merge(a[key], b[key]);
             }
         }
         return a;
     }
 
-}
+};

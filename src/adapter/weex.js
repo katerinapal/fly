@@ -11,12 +11,12 @@ module.exports = function (request, responseCallback) {
                 responseText: res.data,
                 headers: res.headers,
                 statusMessage: res.statusText
-            })
+            });
         } else {
             responseCallback({
                 statusCode: res.status || 0,
                 statusMessage: res.statusText
-            })
+            });
         }
     });
-}
+};

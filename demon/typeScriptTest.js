@@ -1,7 +1,8 @@
 "use strict";
+
 Object.defineProperty(exports, "__esModule", { value: true });
 const fly_1 = require("../dist/npm/fly");
-var fly = new fly_1.default;
+var fly = new fly_1.default();
 var log = console.log;
 fly.config.headers = { xx: 6 };
 fly.interceptors.request.use(function (config) {
@@ -15,7 +16,11 @@ fly.interceptors.response.use(function (response) {
 }, function (err) {
     log(err);
 });
-(async () => {
-    const d = await fly.get("");
-    return await console.log("success", d);
+(() => {
+    return Promise.resolve().then(function () {
+        return fly.get("");
+    }).then(function (_resp) {
+        const d = _resp;
+        return console.log("success", d);
+    });
 })();

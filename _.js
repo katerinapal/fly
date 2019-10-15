@@ -5,7 +5,7 @@ class Fly {
     constructor(engine) {
         this.engine = engine || XMLHttpRequest;
 
-        this.default = this   //For typeScript
+        this.default = this; //For typeScript
 
         /**
          * Add  lock/unlock API for interceptor.
@@ -28,14 +28,14 @@ class Fly {
                 lock() {
                     if (!resolve) {
                         interceptor.p = new Promise((_resolve, _reject) => {
-                            resolve = _resolve
+                            resolve = _resolve;
                             reject = _reject;
-                        })
+                        });
                     }
                 },
                 unlock() {
                     if (resolve) {
-                        resolve()
+                        resolve();
                         _clear();
                     }
                 },
@@ -45,7 +45,7 @@ class Fly {
                         _clear();
                     }
                 }
-            })
+            });
         }
 
         var interceptors = this.interceptors = {
@@ -60,7 +60,7 @@ class Fly {
                     this.handler = handler;
                 }
             }
-        }
+        };
 
         var irq = interceptors.request;
         var irp = interceptors.response;
@@ -74,11 +74,11 @@ class Fly {
             timeout: 0,
             parseJson: true, // Convert response data to JSON object automatically.
             withCredentials: false
-        }
+        };
     }
 
     request(url, data, options) {
-        var engine = new this.engine;
+        var engine = new this.engine();
         var contentType = "Content-Type";
         var interceptors = this.interceptors;
         var requestInterceptor = interceptors.request;
@@ -95,7 +95,7 @@ class Fly {
             function isPromise(p) {
                 // some  polyfill implementation of Promise may be not standard,
                 // so, we test by duck-typing
-                return p && p.then && p.catch
+                return p && p.then && p.catch;
             }
 
             /**
@@ -106,16 +106,20 @@ class Fly {
              */
             function enqueueIfLocked(promise, callback) {
                 if (promise) {
-                    (async () => {
-                        let generatedVariable0;
-                        generatedVariable0 = await promise;
+                    (() => {
+                        return Promise.resolve().then(function () {
+                            let generatedVariable0;
+                            return promise;
+                        }).then(function (_resp) {
+                            generatedVariable0 = _resp;
 
-                        return await (async () => {
-                            callback()
-                        })();
-                    })()
+                            return (() => {
+                                callback();
+                            })();
+                        });
+                    })();
                 } else {
-                    callback()
+                    callback();
                 }
             }
 
@@ -131,12 +135,12 @@ class Fly {
                     if (!baseUrl && isBrowser) {
                         var arr = location.pathname.split("/");
                         arr.pop();
-                        baseUrl = location.protocol + "//" + location.host + (isAbsolute ? "" : arr.join("/"))
+                        baseUrl = location.protocol + "//" + location.host + (isAbsolute ? "" : arr.join("/"));
                     }
                     if (baseUrl[baseUrl.length - 1] !== "/") {
-                        baseUrl += "/"
+                        baseUrl += "/";
                     }
-                    url = baseUrl + (isAbsolute ? url.substr(1) : url)
+                    url = baseUrl + (isAbsolute ? url.substr(1) : url);
                     if (isBrowser) {
 
                         // Normalize the url which contains the ".." or ".", such as
@@ -147,7 +151,7 @@ class Fly {
                     }
                 }
 
-                var responseType = utils.trim(options.responseType || "")
+                var responseType = utils.trim(options.responseType || "");
                 engine.withCredentials = !!options.withCredentials;
                 var isGet = options.method === "GET";
                 if (isGet) {
@@ -164,10 +168,9 @@ class Fly {
                 try {
                     engine.timeout = options.timeout || 0;
                     if (responseType !== "stream") {
-                        engine.responseType = responseType
+                        engine.responseType = responseType;
                     }
-                } catch (e) {
-                }
+                } catch (e) {}
 
                 var customContentType = options.headers[contentType] || options.headers[contentType.toLowerCase()];
 
@@ -179,7 +182,7 @@ class Fly {
                 if (utils.trim((customContentType || "").toLowerCase()) === _contentType) {
                     data = utils.formatParams(data);
                 } else if (!utils.isFormData(data) && ["object", "array"].indexOf(utils.type(data)) !== -1) {
-                    _contentType = 'application/json;charset=utf-8'
+                    _contentType = 'application/json;charset=utf-8';
                     data = JSON.stringify(data);
                 }
                 //If user doesn't set content-type, set default.
@@ -195,9 +198,8 @@ class Fly {
                         try {
                             // In browser environment, some header fields are readonly,
                             // write will cause the exception .
-                            engine.setRequestHeader(k, options.headers[k])
-                        } catch (e) {
-                        }
+                            engine.setRequestHeader(k, options.headers[k]);
+                        } catch (e) {}
                     }
                 }
 
@@ -208,36 +210,39 @@ class Fly {
                             if (type) {
                                 data.request = options;
                             }
-                            var ret = handler.call(responseInterceptor, data, Promise)
+                            var ret = handler.call(responseInterceptor, data, Promise);
                             data = ret === undefined ? data : ret;
                         }
                         if (!isPromise(data)) {
-                            data = Promise[type === 0 ? "resolve" : "reject"](data)
+                            data = Promise[type === 0 ? "resolve" : "reject"](data);
                         }
-                        (async () => {
-                            try {
-                                const d = await data;
+                        (() => {
+                            return Promise.resolve().then(function () {
+                                return Promise.resolve().then(function () {
+                                    return data;
+                                }).then(function (_resp) {
+                                    const d = _resp;
 
-                                return await (async d => {
-                                    resolve(d)
-                                })(d);
-                            } catch (e) {
-                                return await (async e => {
-                                    reject(e)
-                                })(e);
-                            }
-                        })()
-                    })
+                                    return (d => {
+                                        resolve(d);
+                                    })(d);
+                                }).catch(function (e) {
+                                    return (e => {
+                                        reject(e);
+                                    })(e);
+                                });
+                            }).then(function () {});
+                        })();
+                    });
                 }
-
 
                 function onerror(e) {
                     e.engine = engine;
-                    onresult(responseInterceptor.onerror, e, -1)
+                    onresult(responseInterceptor.onerror, e, -1);
                 }
 
                 function Err(msg, status) {
-                    this.message = msg
+                    this.message = msg;
                     this.status = status;
                 }
 
@@ -245,52 +250,52 @@ class Fly {
                     // The xhr of IE9 has not response filed
                     var response = engine.response || engine.responseText;
                     if (response && options.parseJson && (engine.getResponseHeader(contentType) || "").indexOf("json") !== -1
-                        // Some third engine implementation may transform the response text to json object automatically,
-                        // so we should test the type of response before transforming it
-                        && !utils.isObject(response)) {
+                    // Some third engine implementation may transform the response text to json object automatically,
+                    // so we should test the type of response before transforming it
+                    && !utils.isObject(response)) {
                         response = JSON.parse(response);
                     }
                     var headers = {};
                     var items = (engine.getAllResponseHeaders() || "").split("\r\n");
                     items.pop();
-                    items.forEach((e) => {
-                        var key = e.split(":")[0]
-                        headers[key] = engine.getResponseHeader(key)
-                    })
-                    var status = engine.status
-                    var statusText = engine.statusText
-                    var data = {data: response, headers, status, statusText};
+                    items.forEach(e => {
+                        var key = e.split(":")[0];
+                        headers[key] = engine.getResponseHeader(key);
+                    });
+                    var status = engine.status;
+                    var statusText = engine.statusText;
+                    var data = { data: response, headers, status, statusText };
                     // The _response filed of engine is set in  adapter which be called in engine-wrapper.js
-                    utils.merge(data, engine._response)
-                    if ((status >= 200 && status < 300) || status === 304) {
+                    utils.merge(data, engine._response);
+                    if (status >= 200 && status < 300 || status === 304) {
                         data.engine = engine;
                         data.request = options;
-                        onresult(responseInterceptor.handler, data, 0)
+                        onresult(responseInterceptor.handler, data, 0);
                     } else {
                         var e = new Err(statusText, status);
-                        e.response = data
-                        onerror(e)
+                        e.response = data;
+                        onerror(e);
                     }
-                }
+                };
 
-                engine.onerror = (e) => {
-                    onerror(new Err(e.msg || "Network Error", 0))
-                }
+                engine.onerror = e => {
+                    onerror(new Err(e.msg || "Network Error", 0));
+                };
 
                 engine.ontimeout = () => {
-                    onerror(new Err(`timeout [ ${engine.timeout}ms ]`, 1))
-                }
+                    onerror(new Err(`timeout [ ${engine.timeout}ms ]`, 1));
+                };
                 engine._options = options;
                 setTimeout(() => {
-                    engine.send(isGet ? null : data)
-                }, 0)
+                    engine.send(isGet ? null : data);
+                }, 0);
             }
 
             enqueueIfLocked(requestInterceptor.p, () => {
-                utils.merge(options, this.config)
+                utils.merge(options, this.config);
                 var headers = options.headers;
                 headers[contentType] = headers[contentType] || headers[contentTypeLowerCase] || "";
-                delete headers[contentTypeLowerCase]
+                delete headers[contentTypeLowerCase];
                 options.body = data || options.body;
                 url = utils.trim(url || "");
                 options.method = options.method.toUpperCase();
@@ -300,42 +305,47 @@ class Fly {
                     ret = requestInterceptorHandler.call(requestInterceptor, options, Promise) || options;
                 }
                 if (!isPromise(ret)) {
-                    ret = Promise.resolve(ret)
+                    ret = Promise.resolve(ret);
                 }
-                (async () => {
-                    let d;
+                (() => {
+                    return Promise.resolve().then(function () {
+                        let d;
 
-                    try {
-                        d = await ret;
-                    } catch (err) {
-                        return await (async err => {
-                            reject(err)
-                        })(err);
-                    }
+                        return Promise.resolve().then(function () {
+                            return ret;
+                        }).then(function (_resp) {
+                            d = _resp;
+                        }).catch(function (err) {
+                            return (err => {
+                                reject(err);
+                            })(err);
+                        });
+                    }).then(function () {
 
-                    return await (async d => {
-                        //if options continue
-                        if (d === options) {
-                            makeRequest(d)
-                        } else {
-                            resolve(d)
-                        }
-                    })(d);
-                })()
-            })
-        })
+                        return (d => {
+                            //if options continue
+                            if (d === options) {
+                                makeRequest(d);
+                            } else {
+                                resolve(d);
+                            }
+                        })(d);
+                    });
+                })();
+            });
+        });
         promise.engine = engine;
         return promise;
     }
 
     all(promises) {
-        return Promise.all(promises)
+        return Promise.all(promises);
     }
 
     spread(callback) {
         return function (arr) {
             return callback.apply(null, arr);
-        }
+        };
     }
 }
 
@@ -344,20 +354,17 @@ Fly.default = Fly;
 
 ["get", "post", "put", "patch", "head", "delete"].forEach(e => {
     Fly.prototype[e] = function (url, data, option) {
-        return this.request(url, data, utils.merge({method: e}, option))
-    }
-})
-    [("lock", "unlock", "clear")].forEach(e => {
+        return this.request(url, data, utils.merge({ method: e }, option));
+    };
+})[("lock", "unlock", "clear")].forEach(e => {
     Fly.prototype[e] = function () {
         this.interceptors.request[e]();
-    }
-})
+    };
+});
 // Learn more about keep-loader: https://github.com/wendux/keep-loader
 KEEP("cdn||cdn-min", () => {
     // This code block will be removed besides the  "CDN" and "cdn-min" build environment
-    window.fly = new Fly;
+    window.fly = new Fly();
     window.Fly = Fly;
-})
+});
 module.exports = Fly;
-
-

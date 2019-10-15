@@ -3,7 +3,7 @@
  * email: 824783146@qq.com
  **/
 
-let util = require('./utils/utils')
+let util = require('./utils/utils');
 let isBrowser = typeof document !== "undefined";
 
 //EngineWrapper can help  generating  a  http engine quickly through a adapter
@@ -12,18 +12,18 @@ function EngineWrapper(adapter) {
         constructor() {
             this.requestHeaders = {};
             this.readyState = 0;
-            this.timeout = 0;// 0 stands for no timeout
+            this.timeout = 0; // 0 stands for no timeout
             this.responseURL = "";
             this.responseHeaders = {};
         }
 
         _call(name) {
-            this[name] && this[name].apply(this, [].splice.call(arguments, 1))
+            this[name] && this[name].apply(this, [].splice.call(arguments, 1));
         }
 
         _changeReadyState(state) {
             this.readyState = state;
-            this._call("onreadystatechange")
+            this._call("onreadystatechange");
         }
 
         open(method, url) {
@@ -42,7 +42,7 @@ function EngineWrapper(adapter) {
                 }
             }
             this.responseURL = url;
-            this._changeReadyState(1)
+            this._changeReadyState(1);
         }
 
         send(arg) {
@@ -54,12 +54,12 @@ function EngineWrapper(adapter) {
                     url: self.responseURL,
                     headers: self.requestHeaders || {},
                     body: arg
-                }
-                util.merge(request, self._options || {})
+                };
+                util.merge(request, self._options || {});
                 if (request.method === "GET") {
                     request.body = null;
                 }
-                self._changeReadyState(3)
+                self._changeReadyState(3);
                 let timer;
                 self.timeout = self.timeout || 0;
                 if (self.timeout > 0) {
@@ -68,7 +68,6 @@ function EngineWrapper(adapter) {
                             this._call("onloadend");
                             self._changeReadyState(0);
                             self._call("ontimeout");
-
                         }
                     }, self.timeout);
                 }
@@ -76,29 +75,29 @@ function EngineWrapper(adapter) {
                 adapter(request, function (response) {
 
                     function getAndDelete(key) {
-                        let t = response[key]
-                        delete response[key]
+                        let t = response[key];
+                        delete response[key];
                         return t;
                     }
 
                     // If the request has already timeout, return
                     if (self.readyState !== 3) return;
-                    clearTimeout(timer)
+                    clearTimeout(timer);
 
                     // Make sure the type of status is integer
                     self.status = getAndDelete("statusCode") - 0;
 
-                    let responseText = getAndDelete("responseText")
-                    let statusMessage = getAndDelete("statusMessage")
+                    let responseText = getAndDelete("responseText");
+                    let statusMessage = getAndDelete("statusMessage");
 
                     // Network error, set the status code 0
                     if (!self.status) {
                         self.statusText = responseText;
-                        self._call("onerror", {msg: statusMessage});
+                        self._call("onerror", { msg: statusMessage });
                     } else {
                         // Parsing the response headers to array in a object,  because
                         // there may be multiple values with the same header name
-                        let responseHeaders = getAndDelete("headers")
+                        let responseHeaders = getAndDelete("headers");
                         let headers = {};
                         for (let field in responseHeaders) {
                             let value = responseHeaders[field];
@@ -107,17 +106,17 @@ function EngineWrapper(adapter) {
                             if (typeof value === "object") {
                                 headers[key] = value;
                             } else {
-                                headers[key] = headers[key] || []
-                                headers[key].push(value)
+                                headers[key] = headers[key] || [];
+                                headers[key].push(value);
                             }
                         }
                         let cookies = headers["set-cookie"];
                         if (isBrowser && cookies) {
-                            cookies.forEach((e) => {
+                            cookies.forEach(e => {
                                 // Remove the http-Only property of the  cookie
                                 // so that JavaScript can operate it.
-                                document.cookie = e.replace(/;\s*httpOnly/ig, "")
-                            })
+                                document.cookie = e.replace(/;\s*httpOnly/ig, "");
+                            });
                         }
                         self.responseHeaders = headers;
                         // Set the fields of engine from response
@@ -130,7 +129,7 @@ function EngineWrapper(adapter) {
                     self._call("onloadend");
                 });
             } else {
-                console.error("Ajax require adapter")
+                console.error("Ajax require adapter");
             }
         }
 
@@ -139,7 +138,7 @@ function EngineWrapper(adapter) {
         }
 
         getResponseHeader(key) {
-            return (this.responseHeaders[key.toLowerCase()] || "").toString() || null
+            return (this.responseHeaders[key.toLowerCase()] || "").toString() || null;
         }
 
         getAllResponseHeaders() {
@@ -151,13 +150,13 @@ function EngineWrapper(adapter) {
         }
 
         abort(msg) {
-            this._changeReadyState(0)
-            this._call("onerror", {msg});
+            this._changeReadyState(0);
+            this._call("onerror", { msg });
             this._call("onloadend");
         }
 
         static setAdapter(requestAdapter) {
-            adapter = requestAdapter
+            adapter = requestAdapter;
         }
     }
 
@@ -167,15 +166,6 @@ function EngineWrapper(adapter) {
 // learn more about keep-loader: https://github.com/wendux/keep-loader
 KEEP("cdn||cdn-min", () => {
     // This code block will be removed besides the  "CDN" and "cdn-min" build environment
-    window.EngineWrapper = EngineWrapper
-})
+    window.EngineWrapper = EngineWrapper;
+});
 module.exports = EngineWrapper;
-
-
-
-
-
-
-
-
-

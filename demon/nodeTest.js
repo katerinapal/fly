@@ -1,8 +1,8 @@
-var fly = require("../node-index")
+var fly = require("../node-index");
 var FormData = require('form-data');
 var form = new FormData();
 var log = console.log;
-var fs = require("fs")
+var fs = require("fs");
 //设置超时
 fly.config.timeout = 5000;
 
@@ -11,20 +11,23 @@ fly.config.baseURL = "http://localhost/ds"
 
 //get请求
 
-(async () => {
-    try {
-        const d = await fly.get("https://www.baidu.com", {wd: "xxx"});
+(() => {
+    return Promise.resolve().then(function () {
+        return Promise.resolve().then(function () {
+            return fly.get("https://www.baidu.com", { wd: "xxx" });
+        }).then(function (_resp) {
+            const d = _resp;
 
-        return await (async d => {
-            console.log("get请求成功", d.data)
-        })(d);
-    } catch (e) {
-        return await (async e => {
-            log(`get请求失败，错误码：${e.status}, 错误信息：${e.message}`);
-        })(e);
-    }
-})()
-
+            return (d => {
+                console.log("get请求成功", d.data);
+            })(d);
+        }).catch(function (e) {
+            return (e => {
+                log(`get请求失败，错误码：${e.status}, 错误信息：${e.message}`);
+            })(e);
+        });
+    }).then(function () {});
+})();
 
 // 文件下载
 // fly.download("http://localhost:8089/static/v.png", "./v.png")

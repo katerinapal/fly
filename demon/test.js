@@ -4,54 +4,68 @@
 //var fly = require("../index")
 
 var qs = require('qs');
-import fly from "../index"
-(async () => {
-    try {
-        const d = await fly.get("../package.json", {aa: 8, bb: 9, tt: {xx: 5}});
+import fly from "../index";
+(() => {
+    return Promise.resolve().then(function () {
+        return Promise.resolve().then(function () {
+            return fly.get("../package.json", { aa: 8, bb: 9, tt: { xx: 5 } });
+        }).then(function (_resp) {
+            const d = _resp;
 
-        return await (async d => {
-            console.log("get result:", d)
+            return (d => {
+                console.log("get result:", d);
+            })(d);
+        }).catch(function (e) {
+            return console.log("error", e);
+        });
+    }).then(function () {});
+})()(() => {
+    return Promise.resolve().then(function () {
+        return Promise.resolve().then(function () {
+            return fly.post("../package.json", { aa: 8, bb: 9, tt: { xx: 5 } });
+        }).then(function (_resp) {
+            const d = _resp;
+
+            return (d => {
+                console.log("post result:", d);
+            })(d);
+        }).catch(function (e) {
+            return console.log("error", e);
+        });
+    }).then(function () {});
+})()(() => {
+    return Promise.resolve().then(function () {
+        return fly.request("../package.json", { hh: 5 }, {
+            method: "post"
+        });
+    }).then(function (_resp) {
+        const d = _resp;
+
+        return (d => {
+            console.log("ajax result:", d);
         })(d);
-    } catch (e) {
-        return await console.log("error", e);
-    }
-})()
-
-(async () => {
-    try {
-        const d = await fly.post("../package.json", {aa: 8, bb: 9, tt: {xx: 5}});
-
-        return await (async d => {
-            console.log("post result:", d)
-        })(d);
-    } catch (e) {
-        return await console.log("error", e);
-    }
-})()
-
-(async () => {
-    const d = await fly.request("../package.json", {hh: 5}, {
-        method: "post"
     });
-
-    return await (async d => {
-        console.log("ajax result:", d)
-    })(d);
 })()
-
 
 //send data in the application/x-www-form-urlencoded format
-(async () => {
-    const d = await fly.get("",qs.stringify({aa: 8, bb: 9, tt: {xx: 5}}));
+(() => {
+    return Promise.resolve().then(function () {
+        return fly.get("", qs.stringify({ aa: 8, bb: 9, tt: { xx: 5 } }));
+    }).then(function (_resp) {
+        const d = _resp;
 
-    return await (async d => {
+        return (d => {
+            return Promise.resolve();
+        })(d);
+    });
+})()(() => {
+    return Promise.resolve().then(function () {
+        return fly.post("../package.json", qs.stringify({ aa: 8, bb: 9, tt: { xx: 5 } }));
+    }).then(function (_resp) {
+        const d = _resp;
 
-    })(d);
-})()
-(async () => {
-    const d = await fly.post("../package.json", qs.stringify({aa: 8, bb: 9, tt: {xx: 5}}));
-
-    return await (async d => {
-
-    })(d);
-})()
+        return (d => {
+            return Promise.resolve();
+        })(d);
+    });
+})();
